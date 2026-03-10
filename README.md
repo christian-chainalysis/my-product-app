@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# My Product App
 
-## Getting Started
+Example consumer app demonstrating how a product team pulls components and design tokens from the [CDS Registry](https://github.com/christian-chainalysis/registry).
 
-First, run the development server:
+## What This Demonstrates
+
+This is a standard Next.js app that consumes the Chainalysis design system via a shadcn registry. All UI components and the theme (colors, radius, spacing) are pulled from the registry — not installed from npm.
+
+## Setup
+
+### 1. Install dependencies
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Registry is already configured
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+`components.json` points to the CDS registry:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```json
+{
+  "registries": {
+    "@cds": {
+      "url": "https://<registry-url>/r/{name}.json"
+    }
+  }
+}
+```
 
-## Learn More
+### 3. Run locally
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Pulling Updates from the Registry
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### When design pushes updated tokens (colors, radius, etc.):
 
-## Deploy on Vercel
+```bash
+npx shadcn@latest add @cds/theme --overwrite
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This overwrites `src/app/globals.css` with the latest CSS variable values. Run `git diff` to see what changed — it's just value changes in one file:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```diff
+ :root {
+-  --primary: #2563eb;
++  --primary: #7c3aed;
+-  --radius: 8px;
++  --radius: 12px;
+ }
+```
+
+Commit, open a PR, merge, deploy.
+
+### When a registry component is updated (e.g. Button markup changes):
+
+```bash
+npx shadcn@latest add @cds/button --overwrite
+```
+
+### To pull a new component you haven't used before:
+
+```bash
+npx shadcn@latest add @cds/dialog
+```
+
+## What's In Here
+
+| Path | Source |
+|---|---|
+| `src/app/globals.css` | Pulled from registry (`@cds/theme`) — design tokens as CSS variables |
+| `src/components/ui/` | Pulled from registry (`@cds/button`, `@cds/card`, etc.) — component source code |
+| `src/app/page.tsx` | Showcase page built with registry components |
+| `components.json` | shadcn config pointing to the CDS registry |
+
+## Tech Stack
+
+- Next.js 16, Tailwind CSS v4, shadcn v4
+- pnpm
