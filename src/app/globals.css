@@ -51,7 +51,7 @@
   --card-foreground: #09090b;
   --popover: #ffffff;
   --popover-foreground: #09090b;
-  --primary: #3ee02e;
+  --primary: #3b82f6;
   --primary-foreground: #ffffff;
   --secondary: #f4f4f5;
   --secondary-foreground: #18181b;
@@ -63,7 +63,7 @@
   --border: #e4e4e7;
   --input: #e4e4e7;
   --ring: #2563eb;
-  --radius: 4px;
+  --radius: 8px;
 }
 
 .dark {
